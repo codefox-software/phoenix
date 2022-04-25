@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Program>
+    <Main>
+        <OutputConsole text_type="string" text="Hello, world!" />
+    </Main>
+</Program>
