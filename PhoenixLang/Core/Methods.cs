@@ -14,6 +14,83 @@ public static class Methods
     // ReSharper disable UnusedMember.Global
     public static Dictionary<string, Action<XmlNode>> MethodsDict = new();
     
+    [Method("OutputNoLine")]
+    public static void OutputNoLine(XmlNode methodNode)
+    {
+        var textType = InterpretType(GetParameterValue(methodNode, "text_type"));
+        var textRaw = GetParameterValue(methodNode, "text");
+        
+        if (textRaw == null)
+            ParameterNullLog("text");
+        
+        textRaw ??= "";
+            
+        switch (textType)
+        {
+            case Type.String:
+            {
+                Console.Write(textRaw.Replace(@"\n", "\n"));
+                break;
+            }
+
+            case Type.FString:
+            {
+                Console.Write(Variables.Replace(textRaw.Replace(@"\n", "\n")));
+                break;
+            }
+
+            case Type.Number:
+            {
+                if (Defined.GetValueOrDefault("numColor") != "true")
+                {
+                    Console.Write(MathEngine.EvaluateDouble(textRaw));
+                }
+                else
+                {
+                    Console.Write(MathEngine.EvaluateDouble(textRaw)
+                        .ToString(CultureInfo.InvariantCulture)
+                        .Pastel(Color.Green)
+                    );
+                }
+                break;
+            }
+            
+            case Type.FNumber:
+            {
+                if (Defined.GetValueOrDefault("numColor") != "true")
+                {
+                    Console.Write(MathEngine.EvaluateDouble(
+                        Variables.Replace(textRaw))
+                    );
+                }
+                else
+                {
+                    Console.Write(MathEngine.EvaluateDouble(
+                            Variables.Replace(textRaw))
+                        .ToString(CultureInfo.InvariantCulture)
+                        .Pastel(Color.Green)
+                    );
+                }
+                break;
+            }
+
+            case Type.NotFound:
+            {
+                ParameterNullLog("text_type");
+                break;
+            }
+
+            case Type.Unidentified:
+            default:
+            {
+                Exception.ThrowException("Could not identify the type of the text.");
+                Environment.Exit(1);
+                break;
+            }
+            
+        }
+    }
+    
     [Method("OutputConsole")]
     public static void OutputConsole(XmlNode methodNode)
     {
@@ -115,5 +192,88 @@ public static class Methods
     public static void OutputNewLine(XmlNode methodNode)
     {
         Console.WriteLine();
+    }
+
+    [Method("CreateVariable")]
+    public static void CreateVariable(XmlNode methodNode)
+    {
+        var variableName = GetParameterValue(methodNode, "name");
+        var variableType = GetParameterValue(methodNode, "value_type");
+        var variableValue = GetParameterValue(methodNode, "value");
+        
+        if (variableName == null)
+            ParameterNullLog("name");
+        
+        if (variableType == null)
+            ParameterNullLog("value_type");
+        
+        if (variableValue == null)
+            ParameterNullLog("value");
+
+            
+        variableName ??= "";
+        variableType ??= "";
+        variableValue ??= "";
+
+        switch (InterpretType(variableType))
+        {
+            case Type.Number:
+            {
+                Variables.SetVariable(new VariableProps
+                {
+                    Name = variableName,
+                    Type = Type.String,
+                    Value = MathEngine.EvaluateDouble(variableValue).ToString(CultureInfo.InvariantCulture)
+                });
+                break;
+            }
+            case Type.FNumber:
+            {
+                Variables.SetVariable(new VariableProps
+                {
+                    Name = variableName,
+                    Type = Type.String,
+                    Value = MathEngine.EvaluateDouble(Variables.Replace(variableValue)).ToString(CultureInfo.InvariantCulture)
+                });
+                break;
+            }
+
+            case Type.String:
+            {
+                Variables.SetVariable(new VariableProps
+                {
+                    Name = variableName,
+                    Type = Type.String,
+                    Value = variableValue
+                });
+                break;
+            }
+            
+            case Type.FString:
+            {
+                Variables.SetVariable(new VariableProps
+                {
+                    Name = variableName,
+                    Type = Type.String,
+                    Value = Variables.Replace(variableValue)
+                });
+                break;
+            }
+            
+            case Type.NotFound:
+            {
+                ParameterNullLog("text_type");
+                break;
+            }
+            
+            case Type.Unidentified:
+            default:
+            {
+                Exception.ThrowException("Could not identify the type of the variable.");
+                Environment.Exit(1);
+                break;
+            }
+        }
+
     }
 }
