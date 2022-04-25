@@ -108,7 +108,6 @@ public static class Methods
                 Type = Type.String,
                 Value = output
             });
-            
         }
     }
     
