@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Program>
+    <Main>
+        <For range="10" iter="i">
+            <OutputConsole text_type="fstring" text="Iteration: [i]" />
+        </For>
+    </Main>
+</Program>
