@@ -198,24 +198,20 @@ public static class Methods
     public static void CreateVariable(XmlNode methodNode)
     {
         var variableName = GetParameterValue(methodNode, "name");
-        var variableType = GetParameterValue(methodNode, "value_type");
+        var variableType = InterpretType(GetParameterValue(methodNode, "value_type"));
         var variableValue = GetParameterValue(methodNode, "value");
         
         if (variableName == null)
             ParameterNullLog("name");
-        
-        if (variableType == null)
-            ParameterNullLog("value_type");
         
         if (variableValue == null)
             ParameterNullLog("value");
 
             
         variableName ??= "";
-        variableType ??= "";
         variableValue ??= "";
 
-        switch (InterpretType(variableType))
+        switch (variableType)
         {
             case Type.Number:
             {
