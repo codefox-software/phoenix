@@ -10,8 +10,8 @@ public enum Type
     FNumber,
     /// Number
     Number,
-    /// Unidentified
-    Unidentified,
     /// Null (parameter not found)
-    NotFound
+    NotFound,
+    /// Unidentified
+    Unidentified
 }
