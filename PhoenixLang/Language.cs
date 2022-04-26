@@ -23,7 +23,7 @@ public class Language
     {
         var statementInfo = typeof(Statements).GetMethods()
             .Where(x => x.GetCustomAttributes(false).OfType<StatementAttribute>().Any());
-        
+
         foreach (var method in statementInfo)
         {
             void Action(XmlNode node) => method.Invoke(null, new object[] {node});

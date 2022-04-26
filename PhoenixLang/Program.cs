@@ -4,7 +4,7 @@ if (Environment.GetCommandLineArgs().Length > 1)
 {
     var fileLocation = Environment.GetCommandLineArgs()[1];
     var language = new Language(fileLocation);
-    language.Run();    
+    language.Run();
 }
 else
 {
